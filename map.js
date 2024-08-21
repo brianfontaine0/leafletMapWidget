@@ -1,4 +1,14 @@
-(function() {
+(function () {
+  // Récupérer les options de configuration depuis customWidgetConfig
+  var options = window.customWidgetConfig || {};
+
+  var mapLat = options.mapLat || 48.8566; // Latitude par défaut : Paris
+  var mapLng = options.mapLng || 2.3522;  // Longitude par défaut : Paris
+  var mapZoom = options.mapZoom || 13;    // Zoom par défaut
+  var markers = options.mapMarkers || [
+    {lat: 48.8566, lng: 2.3522, popup: "Bienvenue à Paris!"}
+  ]; // Marqueur par défaut
+
   // Charger le CSS de Leaflet
   var leafletCSS = document.createElement('link');
   leafletCSS.rel = 'stylesheet';
@@ -8,18 +18,10 @@
   // Charger le JS de Leaflet
   var leafletJS = document.createElement('script');
   leafletJS.src = 'https://unpkg.com/leaflet/dist/leaflet.js';
+  leafletJS.async = true;
   document.head.appendChild(leafletJS);
 
   leafletJS.onload = function() {
-    // Récupérer les paramètres de l'utilisateur
-    var mapLat = window.mapLat || 48.8566; // Latitude par défaut : Paris
-    var mapLng = window.mapLng || 2.3522;  // Longitude par défaut : Paris
-    var mapZoom = window.mapZoom || 13;    // Zoom par défaut
-
-    var markers = window.mapMarkers || [
-      {lat: 48.8566, lng: 2.3522, popup: "Bienvenue à Paris!"}
-    ]; // Marqueur par défaut
-
     // Créer la div pour la carte si elle n'existe pas
     var mapDiv = document.getElementById('map');
     if (!mapDiv) {
@@ -46,4 +48,12 @@
       }
     });
   };
+
+  // Pour signaler le démarrage du widget
+  var customWidget = (window.customWidget = window.customWidget || []);
+  customWidget.push({
+    startTime: new Date().getTime(),
+    event: "widget.Start",
+  });
+
 })();
